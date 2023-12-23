@@ -5,11 +5,22 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Add one or more beans for configuration
+ * 
+ * @author Mindbowser | rohit.kavthekar@mindbowser.com
+ */
 @Configuration
 public class AppConfig {
 
+	/**
+	 * Model mapper bean used to perform object mapping
+	 * 
+	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
+	 * @return {@link ModelMapper}
+	 */
 	@Bean
-	ModelMapper modelMapperBean() {
+	ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setAmbiguityIgnored(true);
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);

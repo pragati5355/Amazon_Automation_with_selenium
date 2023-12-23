@@ -10,18 +10,44 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
+import com.mb.common.exception.CustomException;
+
+/**
+ * AOP logger for logging the service, controller and dao all methods before and
+ * after execution work.
+ * 
+ * <p>
+ * Calculating execution time taken for request.
+ * <p>
+ * <p>
+ * Logging the exception messages thrown by the exception handler
+ * <p>
+ * 
+ * @author Mindbowser | rohit.kavthekar@mindbowser.com
+ */
 @Aspect
 @Component
-public class LoggingAspect {
+public class LoggerAspect {
 
+	/**
+	 * Apache log4j logger to log the message
+	 */
 	private Logger log = LogManager.getLogger();
 
-	private static final String CONTROLLER_EXPRESSION = "execution(* com.mb.*.controller.*.*(..))";
-	private static final String EXPRESSION = CONTROLLER_EXPRESSION
-			+ " || execution(* com.mb.*.service.*.*(..)) || execution(* com.mb.*.dao.*.*(..))";
+	/**
+	 * Pointcut expression for executing logs for specified packages
+	 */
+	private static final String EXPRESSION = "execution(* com.*.*.controller.*.*(..)) || "
+			+ "execution(* com.*.*.service.*.*(..)) || execution(* com.*.*.dao.*.*(..))";
+
+	/**
+	 * Pointcut expression for logging exception message for specified packages
+	 */
+	private static final String EXCEPTION_EXPRESSION = "execution(* com.*.*.controller.*.*(..))";
 
 	/**
 	 * log name of the method before every method from specified expression package
@@ -52,11 +78,21 @@ public class LoggingAspect {
 	 * @param joinPoint
 	 * @param e
 	 */
-	@AfterThrowing(value = CONTROLLER_EXPRESSION, throwing = "e")
+	@AfterThrowing(value = EXCEPTION_EXPRESSION, throwing = "e")
 	public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-		log.error("exception has been thrown in {}.{} method", joinPoint.getSignature().getDeclaringType(),
+		log.warn("exception has been thrown in {}.{} method", joinPoint.getSignature().getDeclaringType(),
 				joinPoint.getSignature().getName());
-		log.error("exception message :: {}", e.getMessage());
+		if (e instanceof CustomException customException) {
+			if (customException.getHttpStatus() != null
+					&& customException.getHttpStatus().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+				log.error("Internal Server Error :: Message {} :: Detail :: {}", customException.getMessage(),
+						customException.getDetail());
+			} else {
+				log.warn("Caught exception message :: {}", customException.getMessage());
+			}
+		} else {
+			log.error("Uncaught exception message :: {}", e.getMessage());
+		}
 	}
 
 	/**
@@ -64,7 +100,7 @@ public class LoggingAspect {
 	 * 
 	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
 	 * @param proceedingJoinPoint
-	 * @return
+	 * @return {@link Object}
 	 * @throws Throwable
 	 */
 	@Around(EXPRESSION)

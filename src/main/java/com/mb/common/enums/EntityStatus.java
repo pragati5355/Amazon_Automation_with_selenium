@@ -1,7 +1,10 @@
 package com.mb.common.enums;
 
+/**
+ * @author Mindbowser | rohit.kavthekar@mindbowser.com
+ */
 public enum EntityStatus {
 
-	ACTIVE, DEACTIVE, DELETED
+	ACTIVE, DELETED, DEACTIVE
 
 }
