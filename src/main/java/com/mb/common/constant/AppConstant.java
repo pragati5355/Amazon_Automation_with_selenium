@@ -1,14 +1,21 @@
 package com.mb.common.constant;
 
-public class KeyConstant {
-	private KeyConstant() {
+/**
+ * A constant class for storing application related key's. Use properties file
+ * to store key's and value's
+ * 
+ * @author Mindbowser | rohit.kavthekar@mindbowser.com
+ *
+ */
+public class AppConstant {
+
+	private AppConstant() {
 	}
 
-	// SPRING APP
-
+	// Application
 	public static final String APP_NAME = "app.name";
 	public static final String APP_VERSION = "app.version";
 	public static final String APP_ARTIFACT_ID = "app.artifact.id";
 	public static final String APP_GROUP_ID = "app.group.id";
-	
+
 }

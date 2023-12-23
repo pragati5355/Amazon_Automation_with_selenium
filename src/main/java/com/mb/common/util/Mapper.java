@@ -3,27 +3,33 @@ package com.mb.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ConfigurationException;
+import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.mb.common.constant.ExceptionMessage;
-import com.mb.common.exception.CustomErrorCode;
 import com.mb.common.exception.CustomException;
 
+/**
+ * Convert object of any class to another. Ex. Object to list, object to object
+ * 
+ * @author Mindbowser | rohit.kavthekar@mindbowser.com
+ *
+ */
 @Component
 public class Mapper {
 
 	@Autowired
-	private Environment env;
+	private Environment environment;
 
 	@Autowired
 	private ModelMapper modelMapper;
 
 	/**
-	 * Map source object to target class
+	 * Generic method to map source object to target class
 	 * 
 	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
 	 * @param <T>
@@ -33,15 +39,22 @@ public class Mapper {
 	 */
 	public <T> T convert(Object srcObj, Class<T> targetClass) {
 		try {
+
 			return modelMapper.map(srcObj, targetClass);
-		} catch (Exception e) {
-			throw new CustomException(env.getProperty(ExceptionMessage.INTERNAL_SERVER_ERROR), e,
-					CustomErrorCode.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+
+		} catch (IllegalArgumentException argumentException) {
+
+			throw new CustomException(environment.getProperty(ExceptionMessage.SOURCE_OR_DESTINATION_IS_NULL));
+
+		} catch (MappingException | ConfigurationException eRuntimeException) {
+
+			throw new CustomException(environment.getProperty(ExceptionMessage.INTERNAL_SERVER_ERROR),
+					eRuntimeException.getMessage());
 		}
 	}
 
 	/**
-	 * Map source object list to target class list
+	 * Generic method to map source object list to list of target class
 	 * 
 	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
 	 * @param <S>
@@ -52,7 +65,10 @@ public class Mapper {
 	 */
 	public <S, T> List<T> convertToList(List<S> srcList, Class<T> targetClass) {
 		List<T> response = new ArrayList<>();
-		srcList.stream().forEach(source -> response.add(convert(response, targetClass)));
+
+		if (srcList != null) {
+			srcList.stream().forEach(source -> response.add(convert(response, targetClass)));
+		}
 
 		return response;
 	}
