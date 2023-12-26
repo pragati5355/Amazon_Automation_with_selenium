@@ -17,5 +17,6 @@ public class AppConstant {
 	public static final String APP_VERSION = "app.version";
 	public static final String APP_ARTIFACT_ID = "app.artifact.id";
 	public static final String APP_GROUP_ID = "app.group.id";
-
+	public static final String APP_JAVA_VERSION = "app.java.version";
+	public static final String APP_SPRING_BOOT_VERSION = "app.spring.boot.version";
 }
