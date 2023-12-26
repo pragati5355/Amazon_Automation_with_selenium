@@ -36,12 +36,13 @@ public class AppController {
 	 */
 	@GetMapping(ApiPath.HEALTH)
 	public ResponseEntity<SuccessResponse<HealthCheck>> healthCheck() {
-
 		HealthCheck healthCheck = HealthCheck.builder()
 				.appName(environment.getProperty(AppConstant.APP_NAME))
 				.appVersion(environment.getProperty(AppConstant.APP_VERSION))
 				.artifactId(environment.getProperty(AppConstant.APP_ARTIFACT_ID))
 				.groupId(environment.getProperty(AppConstant.APP_GROUP_ID))
+				.javaVersion(environment.getProperty(AppConstant.APP_JAVA_VERSION))
+				.springBootVersion(environment.getProperty(AppConstant.APP_SPRING_BOOT_VERSION))
 				.build();
 
 		return responseBuilder.buildSuccessResponse(environment.getProperty(ResponseMessage.SUCCESS), healthCheck,

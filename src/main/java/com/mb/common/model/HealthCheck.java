@@ -21,4 +21,8 @@ public class HealthCheck {
 
 	private String artifactId;
 
+	private String javaVersion;
+
+	private String springBootVersion;
+
 }
