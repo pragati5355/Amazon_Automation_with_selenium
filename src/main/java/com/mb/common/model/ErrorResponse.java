@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.mb.common.exception.ValidationError;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class ErrorResponse {
+public class ErrorResponse<T> {
 
 	private String message;
 
@@ -34,6 +33,6 @@ public class ErrorResponse {
 
 	private String detail;
 
-	private List<ValidationError> validationErrors;
+	private List<T> errors;
 
 }

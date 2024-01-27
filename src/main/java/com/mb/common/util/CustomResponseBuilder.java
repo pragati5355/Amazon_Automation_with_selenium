@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.mb.common.exception.ValidationError;
 import com.mb.common.model.ErrorResponse;
 import com.mb.common.model.SuccessResponse;
 
@@ -51,14 +50,15 @@ public class CustomResponseBuilder {
 	 * @param httpStatus
 	 * @return {@link ResponseEntity}
 	 */
-	public ResponseEntity<ErrorResponse> buildErrorResponse(String message,String detail, HttpStatus httpStatus) {
+	public <T> ResponseEntity<ErrorResponse<T>> buildErrorResponse(String message, String detail, HttpStatus httpStatus,
+			List<T> errors) {
 
-		ErrorResponse errorResponse = ErrorResponse.builder()
-				.status(httpStatus.value())
-				.message(message)
-				.timestamp(new Date())
-				.detail(detail)
-				.build();
+		ErrorResponse<T> errorResponse = new ErrorResponse<>();
+		errorResponse.setStatus(httpStatus.value());
+		errorResponse.setMessage(message);
+		errorResponse.setTimestamp(new Date());
+		errorResponse.setDetail(detail);
+		errorResponse.setErrors(errors);
 
 		return new ResponseEntity<>(errorResponse, httpStatus);
 	}
@@ -67,20 +67,21 @@ public class CustomResponseBuilder {
 	 * Build http validation error response entity
 	 * 
 	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
+	 * @param <T>
 	 * @param message
 	 * @param detail
 	 * @param fieldErrors
 	 * @return {@link ResponseEntity}
 	 */
-	public ResponseEntity<Object> buildValidationErrorResponse(String message, String detail, List<ValidationError> fieldErrors) {
+	public <T> ResponseEntity<Object> buildValidationErrorResponse(String message, String detail,
+			List<T> validationErrorModels) {
 
-		ErrorResponse errorResponse = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST.value())
-				.message(message)
-				.timestamp(new Date())
-				.validationErrors(fieldErrors)
-				.detail(detail)
-				.build();
+		ErrorResponse<T> errorResponse = new ErrorResponse<>();
+		errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+		errorResponse.setMessage(message);
+		errorResponse.setTimestamp(new Date());
+		errorResponse.setDetail(detail);
+		errorResponse.setErrors(validationErrorModels);
 
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}

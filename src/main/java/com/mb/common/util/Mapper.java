@@ -6,7 +6,6 @@ import java.util.List;
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +21,13 @@ import com.mb.common.exception.CustomException;
 @Component
 public class Mapper {
 
-	@Autowired
-	private Environment environment;
+	private final Environment environment;
+	private final ModelMapper modelMapper;
 
-	@Autowired
-	private ModelMapper modelMapper;
+	public Mapper(Environment environment, ModelMapper modelMapper) {
+		this.environment = environment;
+		this.modelMapper = modelMapper;
+	}
 
 	/**
 	 * Generic method to map source object to target class
