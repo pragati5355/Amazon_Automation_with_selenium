@@ -1,4 +1,4 @@
-package com.mb.common.exception;
+package com.mb.common.model;
 
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class ValidationError {
+public class ValidationErrorModel {
 
 	private String property;
 

@@ -19,7 +19,6 @@ import com.mb.common.exception.CustomException;
 /**
  * AOP logger for logging the service, controller and dao all methods before and
  * after execution work.
- * 
  * <p>
  * Calculating execution time taken for request.
  * <p>
@@ -35,8 +34,10 @@ public class LoggerAspect {
 
 	/**
 	 * Apache log4j logger to log the message
+	 * 
+	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
 	 */
-	private Logger log = LogManager.getLogger();
+	private final Logger log = LogManager.getLogger();
 
 	/**
 	 * Pointcut expression for executing logs for specified packages
@@ -78,20 +79,21 @@ public class LoggerAspect {
 	 * @param joinPoint
 	 * @param e
 	 */
-	@AfterThrowing(value = EXCEPTION_EXPRESSION, throwing = "e")
-	public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
+	@AfterThrowing(value = EXCEPTION_EXPRESSION, throwing = "throwable")
+	public void logAfterThrowing(JoinPoint joinPoint, Throwable throwable) {
 		log.warn("exception has been thrown in {}.{} method", joinPoint.getSignature().getDeclaringType(),
 				joinPoint.getSignature().getName());
-		if (e instanceof CustomException customException) {
+		if (throwable instanceof CustomException customException) {
 			if (customException.getHttpStatus() != null
 					&& customException.getHttpStatus().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
-				log.error("Internal Server Error :: Message {} :: Detail :: {}", customException.getMessage(),
+				log.error("internal server error :: {}, detail :: {}", customException.getMessage(),
 						customException.getDetail());
 			} else {
-				log.warn("Caught exception message :: {}", customException.getMessage());
+				log.warn("caught exception message :: {}, detail :: {}", customException.getMessage(),
+						customException.getDetail());
 			}
 		} else {
-			log.error("Uncaught exception message :: {}", e.getMessage());
+			log.error("uncaught exception message :: {}", throwable.getMessage());
 		}
 	}
 
@@ -105,10 +107,10 @@ public class LoggerAspect {
 	 */
 	@Around(EXPRESSION)
 	public Object profileAllMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-		MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+		final MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 
-		String className = methodSignature.getDeclaringType().getSimpleName();
-		String methodName = methodSignature.getName();
+		final String className = methodSignature.getDeclaringType().getSimpleName();
+		final String methodName = methodSignature.getName();
 
 		final StopWatch stopWatch = new StopWatch();
 

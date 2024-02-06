@@ -7,13 +7,13 @@ package com.mb.common.constant;
  *
  */
 public class ApiPath {
-	private ApiPath() {
-	}
 
 	// BASE URL
 	public static final String V1_BASE_URL = "api/v1/";
 
-	// Health Check Controller
+	// App Controller
 	public static final String HEALTH = "health";
 
+	private ApiPath() {
+	}
 }

@@ -2,7 +2,6 @@ package com.mb.common.exception;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.mb.common.constant.ExceptionMessage;
 import com.mb.common.model.ErrorResponse;
+import com.mb.common.model.ValidationErrorModel;
 import com.mb.common.util.CustomResponseBuilder;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * A custom exception handler class to handle exception thrown by application.
@@ -28,26 +30,25 @@ import com.mb.common.util.CustomResponseBuilder;
  *
  */
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@Autowired
-	private Environment environment;
-
-	@Autowired
-	private CustomResponseBuilder responseBuilder;
+	private final Environment environment;
+	private final CustomResponseBuilder responseBuilder;
 
 	/**
 	 * Custom exception handler
 	 * 
 	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
+	 * @param <T>
 	 * @param customException
 	 * @return {@link ResponseEntity}
 	 */
 	@ExceptionHandler(CustomException.class)
-	public ResponseEntity<ErrorResponse> customExceptionHandler(CustomException customException) {
+	public <T> ResponseEntity<ErrorResponse<T>> customExceptionHandler(CustomException customException) {
 
 		return responseBuilder.buildErrorResponse(customException.getMessage(), customException.getDetail(),
-				customException.getHttpStatus());
+				customException.getHttpStatus(), null);
 	}
 
 	/**
@@ -58,10 +59,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	 * @return {@link ResponseEntity}
 	 */
 	@ExceptionHandler(NullPointerException.class)
-	public ResponseEntity<ErrorResponse> nullPointerExceptionHandler(NullPointerException nullPointerException) {
+	public <T> ResponseEntity<ErrorResponse<T>> nullPointerExceptionHandler(NullPointerException nullPointerException) {
 
 		return responseBuilder.buildErrorResponse(environment.getProperty(ExceptionMessage.INTERNAL_SERVER_ERROR), null,
-				HttpStatus.INTERNAL_SERVER_ERROR);
+				HttpStatus.INTERNAL_SERVER_ERROR, null);
 	}
 
 	/**
@@ -78,8 +79,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-		List<ValidationError> validationErrors = ex.getBindingResult().getFieldErrors().stream()
-				.map(fieldErr -> ValidationError.builder().property(fieldErr.getField())
+		List<ValidationErrorModel> validationErrors = ex.getBindingResult().getFieldErrors().stream()
+				.map(fieldErr -> ValidationErrorModel.builder().property(fieldErr.getField())
 						.rejectedValue(fieldErr.getRejectedValue()).message(fieldErr.getDefaultMessage()).build())
 				.toList();
 

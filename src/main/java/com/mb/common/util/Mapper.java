@@ -6,12 +6,13 @@ import java.util.List;
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.mb.common.constant.ExceptionMessage;
 import com.mb.common.exception.CustomException;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Convert object of any class to another. Ex. Object to list, object to object
@@ -20,13 +21,11 @@ import com.mb.common.exception.CustomException;
  *
  */
 @Component
+@RequiredArgsConstructor
 public class Mapper {
 
-	@Autowired
-	private Environment environment;
-
-	@Autowired
-	private ModelMapper modelMapper;
+	private final Environment environment;
+	private final ModelMapper modelMapper;
 
 	/**
 	 * Generic method to map source object to target class
@@ -67,7 +66,7 @@ public class Mapper {
 		List<T> response = new ArrayList<>();
 
 		if (srcList != null) {
-			srcList.stream().forEach(source -> response.add(convert(response, targetClass)));
+			srcList.stream().forEach(source -> response.add(convert(source, targetClass)));
 		}
 
 		return response;

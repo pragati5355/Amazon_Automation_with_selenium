@@ -1,6 +1,5 @@
 package com.mb.common.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,18 +14,19 @@ import com.mb.common.model.HealthCheck;
 import com.mb.common.model.SuccessResponse;
 import com.mb.common.util.CustomResponseBuilder;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * @author Mindbowser | rohit.kavthekar@mindbowser.com
  */
 @RestController
 @RequestMapping(ApiPath.V1_BASE_URL)
+@RequiredArgsConstructor
 public class AppController {
 
-	@Autowired
-	private Environment environment;
+	private final Environment environment;
 
-	@Autowired
-	private CustomResponseBuilder responseBuilder;
+	private final CustomResponseBuilder responseBuilder;
 
 	/**
 	 * Health check api to return application and it's versions details.
@@ -36,14 +36,13 @@ public class AppController {
 	 */
 	@GetMapping(ApiPath.HEALTH)
 	public ResponseEntity<SuccessResponse<HealthCheck>> healthCheck() {
-		HealthCheck healthCheck = HealthCheck.builder()
-				.appName(environment.getProperty(AppConstant.APP_NAME))
+
+		HealthCheck healthCheck = HealthCheck.builder().appName(environment.getProperty(AppConstant.APP_NAME))
 				.appVersion(environment.getProperty(AppConstant.APP_VERSION))
 				.artifactId(environment.getProperty(AppConstant.APP_ARTIFACT_ID))
 				.groupId(environment.getProperty(AppConstant.APP_GROUP_ID))
 				.javaVersion(environment.getProperty(AppConstant.APP_JAVA_VERSION))
-				.springBootVersion(environment.getProperty(AppConstant.APP_SPRING_BOOT_VERSION))
-				.build();
+				.springBootVersion(environment.getProperty(AppConstant.APP_SPRING_BOOT_VERSION)).build();
 
 		return responseBuilder.buildSuccessResponse(environment.getProperty(ResponseMessage.SUCCESS), healthCheck,
 				HttpStatus.OK);
