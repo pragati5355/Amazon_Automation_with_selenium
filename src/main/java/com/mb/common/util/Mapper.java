@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import com.mb.common.constant.ExceptionMessage;
 import com.mb.common.exception.CustomException;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Convert object of any class to another. Ex. Object to list, object to object
  * 
@@ -19,15 +21,11 @@ import com.mb.common.exception.CustomException;
  *
  */
 @Component
+@RequiredArgsConstructor
 public class Mapper {
 
 	private final Environment environment;
 	private final ModelMapper modelMapper;
-
-	public Mapper(Environment environment, ModelMapper modelMapper) {
-		this.environment = environment;
-		this.modelMapper = modelMapper;
-	}
 
 	/**
 	 * Generic method to map source object to target class

@@ -86,10 +86,10 @@ public class LoggerAspect {
 		if (throwable instanceof CustomException customException) {
 			if (customException.getHttpStatus() != null
 					&& customException.getHttpStatus().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
-				log.error("internal Server Error :: Message {} :: Detail :: {}", customException.getMessage(),
+				log.error("internal server error :: {}, detail :: {}", customException.getMessage(),
 						customException.getDetail());
 			} else {
-				log.warn("caught exception message :: Message {} :: Detail :: {}", customException.getMessage(),
+				log.warn("caught exception message :: {}, detail :: {}", customException.getMessage(),
 						customException.getDetail());
 			}
 		} else {

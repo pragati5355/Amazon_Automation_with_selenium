@@ -18,6 +18,8 @@ import com.mb.common.model.ErrorResponse;
 import com.mb.common.model.ValidationErrorModel;
 import com.mb.common.util.CustomResponseBuilder;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * A custom exception handler class to handle exception thrown by application.
  * It intercepts the final step for creating the response entity object. Added
@@ -28,15 +30,11 @@ import com.mb.common.util.CustomResponseBuilder;
  *
  */
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private final Environment environment;
 	private final CustomResponseBuilder responseBuilder;
-
-	public CustomExceptionHandler(Environment environment, CustomResponseBuilder responseBuilder) {
-		this.environment = environment;
-		this.responseBuilder = responseBuilder;
-	}
 
 	/**
 	 * Custom exception handler

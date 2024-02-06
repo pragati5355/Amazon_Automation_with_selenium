@@ -14,27 +14,19 @@ import com.mb.common.model.HealthCheck;
 import com.mb.common.model.SuccessResponse;
 import com.mb.common.util.CustomResponseBuilder;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * @author Mindbowser | rohit.kavthekar@mindbowser.com
  */
 @RestController
 @RequestMapping(ApiPath.V1_BASE_URL)
+@RequiredArgsConstructor
 public class AppController {
 
-	/**
-	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
-	 */
 	private final Environment environment;
 
-	/**
-	 * @author Mindbowser | rohit.kavthekar@mindbowser.com
-	 */
 	private final CustomResponseBuilder responseBuilder;
-
-	public AppController(Environment environment, CustomResponseBuilder responseBuilder) {
-		this.environment = environment;
-		this.responseBuilder = responseBuilder;
-	}
 
 	/**
 	 * Health check api to return application and it's versions details.
