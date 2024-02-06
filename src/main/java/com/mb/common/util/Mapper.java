@@ -66,7 +66,7 @@ public class Mapper {
 		List<T> response = new ArrayList<>();
 
 		if (srcList != null) {
-			srcList.stream().forEach(source -> response.add(convert(response, targetClass)));
+			srcList.stream().forEach(source -> response.add(convert(source, targetClass)));
 		}
 
 		return response;
