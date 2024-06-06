@@ -46,9 +46,9 @@ public class LoggerAspect {
 			+ "execution(* com.*.*.service.*.*(..)) || execution(* com.*.*.dao.*.*(..))";
 
 	/**
-	 * Pointcut expression for logging exception message for specified packages
+	 * Pointcut expression for logging controller message for specified packages
 	 */
-	private static final String EXCEPTION_EXPRESSION = "execution(* com.*.*.controller.*.*(..))";
+	private static final String CONTROLLER_EXPRESSION = "execution(* com.*.*.controller.*.*(..))";
 
 	/**
 	 * log name of the method before every method from specified expression package
@@ -79,7 +79,7 @@ public class LoggerAspect {
 	 * @param joinPoint
 	 * @param e
 	 */
-	@AfterThrowing(value = EXCEPTION_EXPRESSION, throwing = "throwable")
+	@AfterThrowing(value = CONTROLLER_EXPRESSION, throwing = "throwable")
 	public void logAfterThrowing(JoinPoint joinPoint, Throwable throwable) {
 		log.warn("exception has been thrown in {}.{} method", joinPoint.getSignature().getDeclaringType(),
 				joinPoint.getSignature().getName());
@@ -105,14 +105,14 @@ public class LoggerAspect {
 	 * @return {@link Object}
 	 * @throws Throwable
 	 */
-	@Around(EXPRESSION)
+	@Around(CONTROLLER_EXPRESSION)
 	public Object profileAllMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-		final MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+		MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 
-		final String className = methodSignature.getDeclaringType().getSimpleName();
-		final String methodName = methodSignature.getName();
+		String className = methodSignature.getDeclaringType().getSimpleName();
+		String methodName = methodSignature.getName();
 
-		final StopWatch stopWatch = new StopWatch();
+		StopWatch stopWatch = new StopWatch();
 
 		stopWatch.start();
 		Object result = proceedingJoinPoint.proceed();

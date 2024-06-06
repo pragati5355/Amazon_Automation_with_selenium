@@ -87,4 +87,5 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		return responseBuilder.buildValidationErrorResponse(environment.getProperty(ExceptionMessage.VALIDATION_ERROR),
 				environment.getProperty(ExceptionMessage.INVALID_REQUEST_PARAMS), validationErrors);
 	}
+
 }
