@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
  * @author Mindbowser | rohit.kavthekar@mindbowser.com
  */
 @RestController
-@RequestMapping(ApiPath.V1_BASE_URL)
+@RequestMapping(ApiPath.BASE_URL)
 @RequiredArgsConstructor
 public class AppController {
 

@@ -9,7 +9,7 @@ package com.mb.common.constant;
 public class ApiPath {
 
 	// BASE URL
-	public static final String V1_BASE_URL = "v1/";
+	public static final String BASE_URL = "/api/v1/";
 
 	// App Controller
 	public static final String HEALTH = "health";
